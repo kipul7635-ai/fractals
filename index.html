@@ -11,186 +11,100 @@
     font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
     background:#07090d;color:#e6ebf5;font-size:13px;
   }
-
-  /* ---------- stage (fullscreen) ---------- */
-  #stage{
-    position:fixed;inset:0;overflow:hidden;background:#000;
-    touch-action:none;
-  }
-  canvas{
-    position:absolute;inset:0;width:100%;height:100%;display:block;
-    cursor:grab;touch-action:none;
-  }
+  #stage{position:fixed;inset:0;overflow:hidden;background:#000;touch-action:none}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block;
+    cursor:grab;touch-action:none}
   canvas:active{cursor:grabbing}
-
-  #progress{
-    position:absolute;top:0;left:0;height:2px;width:0;
+  #progress{position:absolute;top:0;left:0;height:2px;width:0;
     background:linear-gradient(90deg,#4cc9f0,#a06bff);
-    box-shadow:0 0 10px #4cc9f0;pointer-events:none;
-    transition:width .1s linear;z-index:5;
-  }
-  #hud{
-    position:absolute;left:12px;bottom:12px;padding:7px 11px;border-radius:8px;
+    box-shadow:0 0 10px #4cc9f0;pointer-events:none;transition:width .1s linear;z-index:5}
+  #hud{position:absolute;left:12px;bottom:12px;padding:7px 11px;border-radius:8px;
     background:rgba(8,11,16,.72);border:1px solid #1e2636;color:#8fa2bd;
     font-size:11px;font-variant-numeric:tabular-nums;letter-spacing:.03em;
     backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-    pointer-events:none;white-space:nowrap;z-index:5;
-  }
+    pointer-events:none;white-space:nowrap;z-index:5}
   #hud b{color:#4cc9f0;font-weight:600}
-  #hint{
-    position:absolute;right:12px;bottom:12px;padding:7px 11px;border-radius:8px;
+  #hint{position:absolute;right:12px;bottom:12px;padding:7px 11px;border-radius:8px;
     background:rgba(8,11,16,.72);border:1px solid #1e2636;color:#66748c;
     font-size:11px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-    pointer-events:none;z-index:5;
-  }
-
-  /* ---------- menu button (FAB) ---------- */
-  #menuBtn{
-    position:fixed;top:14px;left:14px;z-index:30;
-    width:46px;height:46px;border-radius:12px;
-    background:rgba(13,16,23,.82);border:1px solid #263246;
+    pointer-events:none;z-index:5}
+  #menuBtn{position:fixed;top:14px;left:14px;z-index:30;width:46px;height:46px;
+    border-radius:12px;background:rgba(13,16,23,.82);border:1px solid #263246;
     color:#cfdcf0;font-size:20px;cursor:pointer;
     backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
     display:flex;align-items:center;justify-content:center;
     transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .2s,background .15s;
-    box-shadow:0 4px 22px rgba(0,0,0,.55);
-    font-family:inherit;
-  }
+    box-shadow:0 4px 22px rgba(0,0,0,.55);font-family:inherit}
   #menuBtn:hover{background:rgba(30,43,63,.92);border-color:#34455f}
-  #menuBtn.hidden{
-    transform:translateX(-90px);opacity:0;pointer-events:none;
-  }
-
-  /* ---------- slide-out panel ---------- */
-  #panel{
-    position:fixed;top:0;left:0;bottom:0;
-    width:min(340px,88vw);z-index:25;
-    background:#0d1017;border-right:1px solid #1b2130;
-    display:flex;flex-direction:column;
-    transform:translateX(-100%);
-    transition:transform .32s cubic-bezier(.4,0,.2,1);
-    box-shadow:8px 0 44px rgba(0,0,0,.72);
-    will-change:transform;
-  }
+  #menuBtn.hidden{transform:translateX(-90px);opacity:0;pointer-events:none}
+  #panel{position:fixed;top:0;left:0;bottom:0;width:min(340px,88vw);z-index:25;
+    background:#0d1017;border-right:1px solid #1b2130;display:flex;flex-direction:column;
+    transform:translateX(-100%);transition:transform .32s cubic-bezier(.4,0,.2,1);
+    box-shadow:8px 0 44px rgba(0,0,0,.72);will-change:transform}
   #panel.open{transform:translateX(0)}
-
-  .panel-header{
-    padding:14px 16px 12px;border-bottom:1px solid #1b2130;
-    display:flex;align-items:center;justify-content:space-between;
-    flex:0 0 auto;
-  }
-  .panel-header h1{
-    margin:0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
-    color:#7f8ea8;font-weight:600;
-  }
+  .panel-header{padding:14px 16px 12px;border-bottom:1px solid #1b2130;
+    display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
+  .panel-header h1{margin:0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+    color:#7f8ea8;font-weight:600}
   .panel-header h1 b{color:#4cc9f0;font-weight:700}
-  .close-btn{
-    width:32px;height:32px;border-radius:8px;
-    background:#161c28;border:1px solid #263246;color:#9aabc4;
-    cursor:pointer;font-size:15px;display:flex;align-items:center;
-    justify-content:center;transition:.15s;font-family:inherit;
-  }
+  .close-btn{width:32px;height:32px;border-radius:8px;background:#161c28;
+    border:1px solid #263246;color:#9aabc4;cursor:pointer;font-size:15px;
+    display:flex;align-items:center;justify-content:center;transition:.15s;font-family:inherit}
   .close-btn:hover{background:#1e2b3f;color:#fff;border-color:#34455f}
-
-  .panel-scroll{
-    overflow-y:auto;flex:1;padding:10px 16px 26px;
-    scrollbar-width:thin;scrollbar-color:#243049 transparent;
-  }
+  .panel-scroll{overflow-y:auto;flex:1;padding:10px 16px 26px;
+    scrollbar-width:thin;scrollbar-color:#243049 transparent}
   .panel-scroll::-webkit-scrollbar{width:8px}
   .panel-scroll::-webkit-scrollbar-thumb{background:#243049;border-radius:4px}
-
-  /* ---------- controls ---------- */
   .group{padding:11px 0;border-bottom:1px solid #151b26}
   .group:last-child{border-bottom:none}
-  .label{
-    display:flex;justify-content:space-between;align-items:center;
+  .label{display:flex;justify-content:space-between;align-items:center;
     font-size:11px;letter-spacing:.09em;text-transform:uppercase;
-    color:#7f8ea8;margin:0 0 6px;font-weight:600;
-  }
-  .label .val{
-    color:#4cc9f0;font-variant-numeric:tabular-nums;
-    letter-spacing:0;text-transform:none;font-size:11px;
-  }
-
-  select,input[type=range],input[type=color],button{
-    font-family:inherit;font-size:12px;width:100%;
-  }
-  select{
-    background:#161c28;color:#dde5f2;border:1px solid #232c3d;border-radius:7px;
+    color:#7f8ea8;margin:0 0 6px;font-weight:600}
+  .label .val{color:#4cc9f0;font-variant-numeric:tabular-nums;
+    letter-spacing:0;text-transform:none;font-size:11px}
+  select,input[type=range],input[type=color],button{font-family:inherit;font-size:12px;width:100%}
+  select{background:#161c28;color:#dde5f2;border:1px solid #232c3d;border-radius:7px;
     padding:7px 9px;outline:none;cursor:pointer;appearance:none;
     background-image:linear-gradient(45deg,transparent 50%,#5f6d85 50%),
                      linear-gradient(135deg,#5f6d85 50%,transparent 50%);
     background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;
-    background-size:5px 5px,5px 5px;background-repeat:no-repeat;
-  }
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat}
   select:focus{border-color:#2f6f8a;box-shadow:0 0 0 2px rgba(76,201,240,.15)}
-
-  input[type=range]{
-    -webkit-appearance:none;appearance:none;height:22px;
-    background:transparent;margin:0;cursor:pointer;
-  }
-  input[type=range]::-webkit-slider-runnable-track{
-    height:4px;border-radius:2px;background:#1e2636;
-  }
-  input[type=range]::-webkit-slider-thumb{
-    -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
-    background:#4cc9f0;margin-top:-5px;border:2px solid #0d1017;
-    box-shadow:0 0 8px rgba(76,201,240,.7);transition:transform .1s;
-  }
+  optgroup{background:#0f1420;color:#7f8ea8;font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase}
+  option{background:#161c28;color:#dde5f2;font-size:12px;letter-spacing:0;text-transform:none}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:22px;
+    background:transparent;margin:0;cursor:pointer}
+  input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:#1e2636}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+    border-radius:50%;background:#4cc9f0;margin-top:-5px;border:2px solid #0d1017;
+    box-shadow:0 0 8px rgba(76,201,240,.7);transition:transform .1s}
   input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
-  input[type=range]::-moz-range-track{
-    height:4px;border-radius:2px;background:#1e2636;
-  }
-  input[type=range]::-moz-range-thumb{
-    width:12px;height:12px;border-radius:50%;background:#4cc9f0;
-    border:2px solid #0d1017;box-shadow:0 0 8px rgba(76,201,240,.7);
-  }
-
+  input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:#1e2636}
+  input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;
+    background:#4cc9f0;border:2px solid #0d1017;box-shadow:0 0 8px rgba(76,201,240,.7)}
   .spacer{height:4px}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-
-  button{
-    background:#182131;color:#cfdcf0;border:1px solid #263246;border-radius:7px;
-    padding:8px 10px;cursor:pointer;transition:.15s;font-weight:600;
-    letter-spacing:.03em;
-  }
+  button{background:#182131;color:#cfdcf0;border:1px solid #263246;border-radius:7px;
+    padding:8px 10px;cursor:pointer;transition:.15s;font-weight:600;letter-spacing:.03em}
   button:hover{background:#1e2b3f;border-color:#34455f;color:#fff}
   button:active{transform:translateY(1px)}
   button.accent{background:#133344;border-color:#1d556e;color:#8fe3ff}
   button.accent:hover{background:#17435a;color:#b5eeff;border-color:#2a7a9a}
-
-  .check{
-    display:flex;align-items:center;gap:9px;padding:5px 0;cursor:pointer;
-    user-select:none;color:#b8c4d8;font-size:12px;
-  }
-  .check input{
-    appearance:none;-webkit-appearance:none;width:34px;height:19px;
+  .check{display:flex;align-items:center;gap:9px;padding:5px 0;cursor:pointer;
+    user-select:none;color:#b8c4d8;font-size:12px}
+  .check input{appearance:none;-webkit-appearance:none;width:34px;height:19px;
     border-radius:10px;background:#1e2636;position:relative;cursor:pointer;
-    transition:.18s;flex:0 0 auto;border:1px solid #263246;margin:0;
-  }
-  .check input::after{
-    content:'';position:absolute;top:2px;left:2px;width:13px;height:13px;
-    border-radius:50%;background:#6b7a92;transition:.18s;
-  }
+    transition:.18s;flex:0 0 auto;border:1px solid #263246;margin:0}
+  .check input::after{content:'';position:absolute;top:2px;left:2px;width:13px;height:13px;
+    border-radius:50%;background:#6b7a92;transition:.18s}
   .check input:checked{background:#12455c;border-color:#1d6f8f}
-  .check input:checked::after{
-    left:17px;background:#4cc9f0;box-shadow:0 0 8px rgba(76,201,240,.8);
-  }
-
-  input[type=color]{
-    height:32px;padding:2px;border:1px solid #232c3d;border-radius:7px;
-    background:#161c28;cursor:pointer;
-  }
-
-  .note{
-    font-size:10.5px;color:#5a6a82;line-height:1.45;margin:2px 0 0;
-    letter-spacing:.01em;
-  }
-
-  @media (max-width:600px){
-    #hint{display:none}
-    #panel{width:92vw}
-  }
+  .check input:checked::after{left:17px;background:#4cc9f0;
+    box-shadow:0 0 8px rgba(76,201,240,.8)}
+  input[type=color]{height:32px;padding:2px;border:1px solid #232c3d;border-radius:7px;
+    background:#161c28;cursor:pointer}
+  .note{font-size:10.5px;color:#5a6a82;line-height:1.45;margin:2px 0 0;letter-spacing:.01em}
+  @media (max-width:600px){#hint{display:none}#panel{width:92vw}}
 </style>
 </head>
 <body>
@@ -211,19 +125,16 @@
   </div>
   <div class="panel-scroll">
 
-    <!-- fractal -->
     <div class="group">
       <div class="label">Fractal</div>
       <select id="fractal"></select>
     </div>
 
-    <!-- power (conditional) -->
     <div class="group" id="grpPower">
       <div class="label">Power <span class="val" id="vPower">2</span></div>
       <input type="range" id="power" min="2" max="10" step="1" value="2">
     </div>
 
-    <!-- c parameter (conditional) -->
     <div class="group" id="grpC">
       <div class="label" id="lblC">Parameter c <span class="val" id="vC"></span></div>
       <input type="range" id="cRe" min="-2" max="2" step="0.0001" value="-0.7">
@@ -233,7 +144,6 @@
       <button id="randC" class="accent">🎲 Randomize parameter</button>
     </div>
 
-    <!-- formula tweaks -->
     <div class="group">
       <div class="label">Formula Tweaks</div>
       <label class="check"><input type="checkbox" id="absX"> Absolute real part &nbsp;<span style="color:#5a6a82;font-size:10.5px">|Re z|</span></label>
@@ -247,7 +157,6 @@
       <p class="note">Modifiers apply to every iteration. Try them with different fractals.</p>
     </div>
 
-    <!-- palette -->
     <div class="group">
       <div class="label">Palette</div>
       <select id="palette"></select>
@@ -259,7 +168,6 @@
       </select>
     </div>
 
-    <!-- colors -->
     <div class="group">
       <div class="label">Color spread <span class="val" id="vSpread">30</span></div>
       <input type="range" id="spread" min="2" max="200" step="1" value="30">
@@ -271,7 +179,6 @@
       <label class="check"><input type="checkbox" id="invert"> Invert palette</label>
     </div>
 
-    <!-- render -->
     <div class="group">
       <div class="label">Max iterations <span class="val" id="vIter">200</span></div>
       <input type="range" id="maxIter" min="32" max="3000" step="1" value="200">
@@ -284,7 +191,6 @@
       <input type="color" id="interior" value="#000000">
     </div>
 
-    <!-- actions -->
     <div class="group">
       <div class="row2">
         <button id="reset">⟲ Reset view</button>
@@ -301,7 +207,7 @@
 'use strict';
 
 /* ================================================================
-   PALETTES  (cyclic — first stop equals last stop)
+   PALETTES
    ================================================================ */
 const PALETTES = {
   fire:     [[0,0,0],[60,8,10],[180,35,0],[255,110,0],[255,200,60],[255,255,225],[255,150,20],[110,18,0],[0,0,0]],
@@ -315,7 +221,10 @@ const PALETTES = {
   neon:     [[10,0,20],[82,0,122],[255,0,182],[255,122,0],[255,255,0],[0,255,182],[0,122,255],[82,0,122],[10,0,20]],
   pastel:   [[40,40,62],[92,82,142],[162,132,202],[242,172,202],[255,216,192],[202,242,222],[142,202,232],[92,82,142],[40,40,62]],
   mono:     [[0,0,0],[255,255,255],[0,0,0]],
-  icefire:  [[0,10,40],[0,90,180],[120,220,255],[255,255,255],[255,180,40],[200,40,0],[60,0,10],[0,10,40]]
+  icefire:  [[0,10,40],[0,90,180],[120,220,255],[255,255,255],[255,180,40],[200,40,0],[60,0,10],[0,10,40]],
+  toxic:    [[0,0,0],[18,55,10],[55,150,20],[170,255,60],[255,255,190],[55,150,20],[10,35,5],[0,0,0]],
+  candy:    [[40,0,60],[160,20,180],[255,80,200],[255,180,240],[180,255,255],[80,180,255],[160,20,180],[40,0,60]],
+  lava:     [[0,0,0],[80,0,0],[200,20,0],[255,80,0],[255,200,0],[255,255,200],[200,60,0],[80,0,0],[0,0,0]]
 };
 const LUT_N = 1024;
 const LUT_CACHE = {};
@@ -337,10 +246,8 @@ function getLUT(name) {
 }
 
 /* ================================================================
-   FRACTAL DEFINITIONS
+   FRACTALS
    ================================================================ */
-
-/* (zx + i·zy)^p  computed in place */
 function powStmt(p) {
   let s = `let _ar = zx, _ai = zy, _br = zx, _bi = zy;\n`;
   for (let k = 1; k < p; k++) {
@@ -351,6 +258,7 @@ function powStmt(p) {
 }
 
 const FRACTALS = {
+  /* ---------- CLASSIC ---------- */
   mandelbrot: {
     name: 'Mandelbrot',
     view: { cx: -0.6, cy: 0, span: 3.2 },
@@ -369,38 +277,37 @@ const FRACTALS = {
     name: 'Burning Ship',
     view: { cx: -0.5, cy: -0.5, span: 3.2 },
     init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
-    step: () => `{const _x=ABS(zx), _y=ABS(zy); const _t=_x*_x-_y*_y+cx; zy=2*_x*_y+cy; zx=_t;}`
+    step: `{const _x=ABS(zx), _y=ABS(zy); const _t=_x*_x-_y*_y+cx; zy=2*_x*_y+cy; zx=_t;}`
   },
   tricorn: {
     name: 'Tricorn',
     view: { cx: -0.2, cy: 0, span: 3.4 },
     init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
-    step: () => `{const _t=zx*zx-zy*zy+cx; zy=-2*zx*zy+cy; zx=_t;}`
+    step: `{const _t=zx*zx-zy*zy+cx; zy=-2*zx*zy+cy; zx=_t;}`
   },
   celtic: {
     name: 'Celtic',
     view: { cx: -0.5, cy: 0, span: 3.4 },
     init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
-    step: () => `{const _t=ABS(zx*zx-zy*zy)+cx; zy=2*zx*zy+cy; zx=_t;}`
+    step: `{const _t=ABS(zx*zx-zy*zy)+cx; zy=2*zx*zy+cy; zx=_t;}`
   },
   perpendicular: {
     name: 'Perpendicular',
     view: { cx: -0.5, cy: 0, span: 3.4 },
     init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
-    step: () => `{const _t=zx*zx-zy*zy+cx; zy=-2*ABS(zx)*zy+cy; zx=_t;}`
+    step: `{const _t=zx*zx-zy*zy+cx; zy=-2*ABS(zx)*zy+cy; zx=_t;}`
   },
   buffalo: {
     name: 'Buffalo',
     view: { cx: -0.5, cy: 0, span: 3.4 },
     init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
-    step: () => `{const _t=zx*zx-zy*zy-ABS(zx)+cx; zy=2*zx*zy-ABS(zy)+cy; zx=_t;}`
+    step: `{const _t=zx*zx-zy*zy-ABS(zx)+cx; zy=2*zx*zy-ABS(zy)+cy; zx=_t;}`
   },
   lambda: {
     name: 'Lambda',
     view: { cx: 1.0, cy: 0, span: 5.0 },
     init: `let zx = 0.5, zy = 0; const cx = wx, cy = wy;`,
-    step: () => `
-      {const _wr = zx - zx*zx + zy*zy;
+    step: `{const _wr = zx - zx*zx + zy*zy;
        const _wi = zy - 2*zx*zy;
        zx = cx*_wr - cy*_wi;
        zy = cx*_wi + cy*_wr;}`
@@ -410,18 +317,130 @@ const FRACTALS = {
     view: { cx: 0, cy: 0, span: 3.4 },
     cDef: [-0.5, 0.5], cLabel: 'Phoenix p, q',
     init: `let zx = wx, zy = wy, pzx = 0, pzy = 0;`,
-    step: () => `
-      {const _nr = zx*zx - zy*zy + cRe + cIm*pzx;
+    step: `{const _nr = zx*zx - zy*zy + cRe + cIm*pzx;
        const _ni = 2*zx*zy + cIm*pzy;
        pzx = zx; pzy = zy;
        zx = _nr; zy = _ni;}`
+  },
+  magnet: {
+    name: 'Magnet',
+    view: { cx: 0.8, cy: 0, span: 4.0 },
+    init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
+    step: `{const _ar = zx*zx - zy*zy + cx - 1;
+       const _ai = 2*zx*zy + cy;
+       const _br = 2*zx + cx - 2;
+       const _bi = 2*zy + cy;
+       const _dd = _br*_br + _bi*_bi + 1e-12;
+       const _qr = (_ar*_br + _ai*_bi) / _dd;
+       const _qi = (_ai*_br - _ar*_bi) / _dd;
+       zx = _qr*_qr - _qi*_qi;
+       zy = 2*_qr*_qi;}`
+  },
+  nova: {
+    name: 'Nova',
+    view: { cx: -0.5, cy: 0, span: 3.0 },
+    init: `let zx = 1, zy = 0; const cx = wx, cy = wy;`,
+    step: `{const _z2r = zx*zx - zy*zy;
+       const _z2i = 2*zx*zy;
+       const _z3r = _z2r*zx - _z2i*zy;
+       const _z3i = _z2r*zy + _z2i*zx;
+       const _nr = _z3r - 1;
+       const _ni = _z3i;
+       const _dr = 3*_z2r;
+       const _di = 3*_z2i;
+       const _dd = _dr*_dr + _di*_di + 1e-12;
+       const _qr = (_nr*_dr + _ni*_di) / _dd;
+       const _qi = (_ni*_dr - _nr*_di) / _dd;
+       zx = zx - _qr + cx;
+       zy = zy - _qi + cy;}`
+  },
+  spider: {
+    name: 'Spider',
+    view: { cx: 0, cy: 0, span: 4.0 },
+    init: `let zx = wx, zy = wy, cx = wx, cy = wy;`,
+    step: `{const _t = zx*zx - zy*zy + cx;
+       zy = 2*zx*zy + cy;
+       zx = _t;
+       cx = cx*0.5 + zx;
+       cy = cy*0.5 + zy;}`
+  },
+  sine: {
+    name: 'Sine',
+    view: { cx: 0, cy: 0, span: 4.0 },
+    init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
+    step: `{const _sx = SIN(zx)*COSH(zy) + cx;
+       const _sy = COS(zx)*SINH(zy) + cy;
+       zx = _sx; zy = _sy;}`
+  },
+
+  /* ---------- INVENTED ---------- */
+  buffaloship: {
+    name: 'Buffalo Ship',
+    view: { cx: -0.5, cy: 0, span: 3.4 },
+    init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
+    step: `{const _x = ABS(zx), _y = ABS(zy);
+       const _t = _x*_x - _y*_y - _x + cx;
+       zy = 2*_x*_y - _y + cy;
+       zx = _t;}`
+  },
+  celticship: {
+    name: 'Celtic Ship',
+    view: { cx: -0.5, cy: 0, span: 3.4 },
+    init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
+    step: `{const _x = ABS(zx), _y = ABS(zy);
+       const _t = ABS(_x*_x - _y*_y) + cx;
+       zy = 2*_x*_y + cy;
+       zx = _t;}`
+  },
+  wing: {
+    name: 'Wing',
+    view: { cx: -0.5, cy: 0, span: 3.4 },
+    init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
+    step: `{const _t = zx*zx - zy*zy + cx;
+       zy = 2*zx*ABS(zy) + cy;
+       zx = _t;}`
+  },
+  thorn: {
+    name: 'Thorn',
+    view: { cx: -0.5, cy: 0, span: 3.4 },
+    init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
+    step: `{const _t = ABS(zx*zx - zy*zy);
+       const _u = 2*zx*zy;
+       zx = _t + cx;
+       zy = _u - ABS(_u)*0.5 + cy;}`
+  },
+  rose: {
+    name: 'Rose',
+    view: { cx: 0, cy: 0, span: 4.0 },
+    init: `let zx = 0.5, zy = 0; const cx = wx, cy = wy;`,
+    step: `{const _r2 = zx*zx + zy*zy + 1e-12;
+       const _ir = zx / _r2;
+       const _ii = -zy / _r2;
+       const _t = zx*zx - zy*zy + cx + 0.3*_ir;
+       zy = 2*zx*zy + cy + 0.3*_ii;
+       zx = _t;}`
+  },
+  bishop: {
+    name: 'Bishop',
+    view: { cx: -0.5, cy: 0, span: 3.4 },
+    init: `let zx = 0, zy = 0; const cx = wx, cy = wy;`,
+    step: `{const _t = ABS(zx*zx - zy*zy);
+       const _u = -2*zx*zy;
+       zx = _t + cx;
+       zy = _u + cy;}`
   }
 };
 
+/* Optgroup categories for the dropdown */
+const FRACTAL_GROUPS = [
+  { label: 'Classic',  ids: ['mandelbrot','julia','burningship','tricorn','celtic',
+                             'perpendicular','buffalo','lambda','phoenix',
+                             'magnet','nova','spider','sine'] },
+  { label: 'Invented', ids: ['buffaloship','celticship','wing','thorn','rose','bishop'] }
+];
+
 /* ================================================================
-   CODE GENERATOR — builds a specialised row renderer.
-   Formula modifiers are injected as prefix/suffix code inside the
-   iteration loop, so they combine with any fractal.
+   RENDERER GENERATOR
    ================================================================ */
 function makeRenderer(fid, opts) {
   const f = FRACTALS[fid];
@@ -442,7 +461,8 @@ function makeRenderer(fid, opts) {
 
   const src = `
 "use strict";
-const ABS = Math.abs, LG = Math.log, SIN = Math.sin;
+const ABS = Math.abs, LG = Math.log, SIN = Math.sin, COS = Math.cos,
+      SINH = Math.sinh, COSH = Math.cosh, EXP = Math.exp;
 const PL = ${pl};
 const BAIL2 = ${bail2};
 return function(mu, w, h, row0, row1, x0, y1, d, maxIter, cRe, cIm) {
@@ -485,18 +505,13 @@ const S = {
   interior: [0, 0, 0],
   cycle: false,
   view: { cx: -0.6, cy: 0, span: 3.2 },
-  /* new */
   quality: 1.0,
-  absX: false,
-  absY: false,
-  swap: false,
-  negIm: false,
-  sinTwist: false,
+  absX: false, absY: false, swap: false, negIm: false, sinTwist: false,
   bailout: 16
 };
 
 /* ================================================================
-   DOM
+   DOM + RENDER LOOP
    ================================================================ */
 const $ = id => document.getElementById(id);
 const canvas = $('cv');
@@ -512,19 +527,12 @@ let renderer = null;
 let needsRegen = true, needsFull = true, needsColor = true;
 let lut = getLUT(S.palette);
 
-/* ================================================================
-   RENDER
-   ================================================================ */
 function regenRenderer() {
   const p = FRACTALS[S.fid].power ? S.power : 2;
   renderer = makeRenderer(S.fid, {
     power: p,
-    absX: S.absX,
-    absY: S.absY,
-    swap: S.swap,
-    negIm: S.negIm,
-    sinTwist: S.sinTwist,
-    bailout: S.bailout
+    absX: S.absX, absY: S.absY, swap: S.swap,
+    negIm: S.negIm, sinTwist: S.sinTwist, bailout: S.bailout
   });
 }
 
@@ -557,12 +565,8 @@ function colorizeRange(r0, r1) {
     if (m < 0) { r = ir; g = ig; b = ib; }
     else {
       let t;
-      if (banded) {
-        t = ((m | 0) % 24) / 24;
-      } else {
-        t = m / spread + offset;
-        t = t - Math.floor(t);
-      }
+      if (banded) { t = ((m | 0) % 24) / 24; }
+      else { t = m / spread + offset; t = t - Math.floor(t); }
       if (invert) t = 1 - t;
       let ci = (t * lutN) | 0;
       if (ci >= lutN) ci = lutN - 1; else if (ci < 0) ci = 0;
@@ -597,7 +601,6 @@ function colorizeAll() {
   ctx.putImageData(imgData, 0, 0);
 }
 
-/* ---------- main loop ---------- */
 function frame() {
   if (needsRegen) {
     needsRegen = false;
@@ -620,22 +623,19 @@ function frame() {
 }
 
 /* ================================================================
-   CANVAS SIZING
+   RESIZE / VIEW
    ================================================================ */
 function resize() {
   const r = stage.getBoundingClientRect();
   if (r.width < 2 || r.height < 2) return;
-
   const MAXPIX = 5000000;
   let dpr = Math.min((window.devicePixelRatio || 1) * S.quality, 2.5);
   if (r.width * r.height * dpr * dpr > MAXPIX) {
     dpr = Math.sqrt(MAXPIX / (r.width * r.height));
   }
-
   const w = Math.max(1, Math.round(r.width * dpr));
   const h = Math.max(1, Math.round(r.height * dpr));
   if (w === canvas.width && h === canvas.height) return;
-
   canvas.width = w; canvas.height = h;
   W = w; H = h;
   muBuf = new Float32Array(w * h);
@@ -646,9 +646,6 @@ function resize() {
   needsFull = true;
 }
 
-/* ================================================================
-   VIEW HELPERS
-   ================================================================ */
 function viewD() { return S.view.span / W; }
 
 function zoomAt(mx, my, factor) {
@@ -681,18 +678,15 @@ function updateHud() {
 }
 
 /* ================================================================
-   POINTER INTERACTION
+   POINTER
    ================================================================ */
 const ptrs = new Map();
-let dragPt = null;
-let pinch = null;
+let dragPt = null, pinch = null;
 
 function toCanvas(e) {
   const r = canvas.getBoundingClientRect();
-  return {
-    x: (e.clientX - r.left) * (W / r.width),
-    y: (e.clientY - r.top) * (H / r.height)
-  };
+  return { x: (e.clientX - r.left) * (W / r.width),
+           y: (e.clientY - r.top) * (H / r.height) };
 }
 
 canvas.addEventListener('pointerdown', e => {
@@ -712,7 +706,6 @@ canvas.addEventListener('pointermove', e => {
   if (!ptrs.has(e.pointerId)) return;
   const p = toCanvas(e);
   ptrs.set(e.pointerId, p);
-
   if (ptrs.size === 2 && pinch) {
     const [a, b] = [...ptrs.values()];
     const dist = Math.hypot(a.x - b.x, a.y - b.y);
@@ -738,10 +731,7 @@ canvas.addEventListener('pointermove', e => {
 function endPointer(e) {
   ptrs.delete(e.pointerId);
   if (ptrs.size === 0) { dragPt = null; pinch = null; }
-  else if (ptrs.size === 1) {
-    dragPt = [...ptrs.values()][0];
-    pinch = null;
-  }
+  else if (ptrs.size === 1) { dragPt = [...ptrs.values()][0]; pinch = null; }
 }
 canvas.addEventListener('pointerup', endPointer);
 canvas.addEventListener('pointercancel', endPointer);
@@ -749,8 +739,7 @@ canvas.addEventListener('pointercancel', endPointer);
 canvas.addEventListener('wheel', e => {
   e.preventDefault();
   const p = toCanvas(e);
-  const f = Math.exp(e.deltaY * 0.0016);
-  zoomAt(p.x, p.y, f);
+  zoomAt(p.x, p.y, Math.exp(e.deltaY * 0.0016));
 }, { passive: false });
 
 canvas.addEventListener('dblclick', e => {
@@ -759,11 +748,10 @@ canvas.addEventListener('dblclick', e => {
 });
 
 /* ================================================================
-   PANEL TOGGLE
+   PANEL
    ================================================================ */
 const panel = $('panel');
 const menuBtn = $('menuBtn');
-
 function openPanel() {
   panel.classList.add('open');
   panel.setAttribute('aria-hidden', 'false');
@@ -779,20 +767,24 @@ function togglePanel() {
 }
 menuBtn.addEventListener('click', openPanel);
 $('closePanel').addEventListener('click', closePanel);
-
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closePanel();
   else if (e.key === 'h' || e.key === 'H') togglePanel();
 });
 
 /* ================================================================
-   UI WIRING
+   UI
    ================================================================ */
 const fractalSel = $('fractal');
-for (const k in FRACTALS) {
-  const o = document.createElement('option');
-  o.value = k; o.textContent = FRACTALS[k].name;
-  fractalSel.appendChild(o);
+for (const g of FRACTAL_GROUPS) {
+  const og = document.createElement('optgroup');
+  og.label = g.label;
+  for (const id of g.ids) {
+    const o = document.createElement('option');
+    o.value = id; o.textContent = FRACTALS[id].name;
+    og.appendChild(o);
+  }
+  fractalSel.appendChild(og);
 }
 fractalSel.value = S.fid;
 
@@ -826,7 +818,6 @@ function syncUI() {
   paletteSel.value = S.palette;
   $('interior').value = '#' + S.interior.map(v =>
     v.toString(16).padStart(2, '0')).join('');
-
   $('quality').value = S.quality;
   $('vQuality').textContent = S.quality.toFixed(1) + '×';
   $('bailout').value = S.bailout;
@@ -852,20 +843,17 @@ function applyFractalDefaults(resetParams) {
   needsRegen = true;
 }
 
-/* ---------- fractal ---------- */
 fractalSel.addEventListener('change', () => {
   S.fid = fractalSel.value;
   applyFractalDefaults(true);
 });
 
-/* ---------- power ---------- */
 $('power').addEventListener('input', e => {
   S.power = +e.target.value;
   $('vPower').textContent = S.power;
   needsRegen = true;
 });
 
-/* ---------- c parameter ---------- */
 function onCChange() {
   S.cRe = +$('cRe').value;
   S.cIm = +$('cIm').value;
@@ -895,7 +883,6 @@ $('randC').addEventListener('click', () => {
   needsFull = true;
 });
 
-/* ---------- formula tweaks ---------- */
 function bindCheck(id, key) {
   $(id).addEventListener('change', e => {
     S[key] = e.target.checked;
@@ -914,7 +901,6 @@ $('bailout').addEventListener('input', e => {
   needsRegen = true;
 });
 
-/* ---------- palette / coloring ---------- */
 paletteSel.addEventListener('change', () => {
   S.palette = paletteSel.value;
   lut = getLUT(S.palette);
@@ -947,7 +933,6 @@ $('cycle').addEventListener('change', e => {
   S.cycle = e.target.checked;
 });
 
-/* ---------- render ---------- */
 $('maxIter').addEventListener('input', e => {
   S.maxIter = +e.target.value;
   $('vIter').textContent = S.maxIter;
@@ -967,7 +952,6 @@ $('interior').addEventListener('input', e => {
   needsColor = true;
 });
 
-/* ---------- actions ---------- */
 $('reset').addEventListener('click', resetView);
 
 $('save').addEventListener('click', () => {
