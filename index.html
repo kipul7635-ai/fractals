@@ -185,13 +185,7 @@
       <div class="spacer"></div>
       <div class="label">Render quality <span class="val" id="vQuality">1.0×</span></div>
       <input type="range" id="quality" min="0.4" max="2" step="0.1" value="1">
-      
-      <div class="spacer"></div>
-      <div class="label">Rotation <span class="val" id="vRotation">0°</span></div>
-      <input type="range" id="rotation" min="0" max="360" step="1" value="0">
-      <button id="resetRot" class="accent" style="margin-top:4px;font-size:11px;padding:5px;">Reset rotation</button>
-
-      <p class="note">Higher quality = sharper but slower. Lower = faster preview.</p>
+      <p class="note">Higher = sharper but slower. Lower = faster preview.</p>
       <div class="spacer"></div>
       <div class="label">Interior color</div>
       <input type="color" id="interior" value="#000000">
@@ -212,6 +206,9 @@
 (() => {
 'use strict';
 
+/* ================================================================
+   PALETTES
+   ================================================================ */
 const PALETTES = {
   fire:     [[0,0,0],[60,8,10],[180,35,0],[255,110,0],[255,200,60],[255,255,225],[255,150,20],[110,18,0],[0,0,0]],
   ice:      [[0,2,10],[0,22,62],[0,85,155],[40,175,235],[155,238,255],[255,255,255],[55,180,240],[0,55,115],[0,2,10]],
@@ -248,6 +245,9 @@ function getLUT(name) {
   return lut;
 }
 
+/* ================================================================
+   FRACTALS
+   ================================================================ */
 function powStmt(p) {
   let s = `let _ar = zx, _ai = zy, _br = zx, _bi = zy;\n`;
   for (let k = 1; k < p; k++) {
@@ -258,6 +258,7 @@ function powStmt(p) {
 }
 
 const FRACTALS = {
+  /* ---------- CLASSIC ---------- */
   mandelbrot: {
     name: 'Mandelbrot',
     view: { cx: -0.6, cy: 0, span: 3.2 },
@@ -371,6 +372,8 @@ const FRACTALS = {
        const _sy = COS(zx)*SINH(zy) + cy;
        zx = _sx; zy = _sy;}`
   },
+
+  /* ---------- INVENTED ---------- */
   buffaloship: {
     name: 'Buffalo Ship',
     view: { cx: -0.5, cy: 0, span: 3.4 },
@@ -428,6 +431,7 @@ const FRACTALS = {
   }
 };
 
+/* Optgroup categories for the dropdown */
 const FRACTAL_GROUPS = [
   { label: 'Classic',  ids: ['mandelbrot','julia','burningship','tricorn','celtic',
                              'perpendicular','buffalo','lambda','phoenix',
@@ -435,6 +439,9 @@ const FRACTAL_GROUPS = [
   { label: 'Invented', ids: ['buffaloship','celticship','wing','thorn','rose','bishop'] }
 ];
 
+/* ================================================================
+   RENDERER GENERATOR
+   ================================================================ */
 function makeRenderer(fid, opts) {
   const f = FRACTALS[fid];
   const power = opts.power;
@@ -455,21 +462,15 @@ function makeRenderer(fid, opts) {
   const src = `
 "use strict";
 const ABS = Math.abs, LG = Math.log, SIN = Math.sin, COS = Math.cos,
-      SINH = Math.sinh, COSH = Math.cosh;
+      SINH = Math.sinh, COSH = Math.cosh, EXP = Math.exp;
 const PL = ${pl};
 const BAIL2 = ${bail2};
-return function(mu, w, h, row0, row1, viewCx, viewCy, d, maxIter, cRe, cIm, cosT, sinT) {
-  const cx = w / 2;
-  const cy = h / 2;
+return function(mu, w, h, row0, row1, x0, y1, d, maxIter, cRe, cIm) {
   for (let py = row0; py < row1; py++) {
-    const dy = py - cy;
+    const wy = y1 - py * d;
     let o = py * w;
     for (let px = 0; px < w; px++) {
-      const dx = px - cx;
-      const rx = dx * cosT - dy * sinT;
-      const ry = dx * sinT + dy * cosT;
-      const wx = viewCx + rx * d;
-      const wy = viewCy - ry * d;
+      const wx = x0 + px * d;
       ${f.init}
       let zx2 = zx*zx, zy2 = zy*zy;
       let i = 0;
@@ -487,6 +488,9 @@ return function(mu, w, h, row0, row1, viewCx, viewCy, d, maxIter, cRe, cIm, cosT
   return new Function(src)();
 }
 
+/* ================================================================
+   STATE
+   ================================================================ */
 const S = {
   fid: 'mandelbrot',
   power: 2,
@@ -503,10 +507,12 @@ const S = {
   view: { cx: -0.6, cy: 0, span: 3.2 },
   quality: 1.0,
   absX: false, absY: false, swap: false, negIm: false, sinTwist: false,
-  bailout: 16,
-  rotation: 0
+  bailout: 16
 };
 
+/* ================================================================
+   DOM + RENDER LOOP
+   ================================================================ */
 const $ = id => document.getElementById(id);
 const canvas = $('cv');
 const ctx = canvas.getContext('2d', { alpha: false });
@@ -540,10 +546,8 @@ function startFullJob() {
   const d = S.view.span / W;
   job = {
     row: 0, drawn: 0, renderer, d,
-    viewCx: S.view.cx,
-    viewCy: S.view.cy,
-    cosT: Math.cos(S.rotation),
-    sinT: Math.sin(S.rotation)
+    x0: S.view.cx - S.view.span / 2,
+    y1: S.view.cy + d * H / 2
   };
 }
 
@@ -577,10 +581,8 @@ function colorizeRange(r0, r1) {
 function runJobFrame() {
   const t0 = performance.now();
   while (job.row < H && performance.now() - t0 < 14) {
-    job.renderer(muBuf, W, H, job.row, job.row + 1,
-                 job.viewCx, job.viewCy, job.d,
-                 S.maxIter, S.cRe, S.cIm,
-                 job.cosT, job.sinT);
+    job.renderer(muBuf, W, H, job.row, job.row + 1, job.x0, job.y1, job.d,
+                 S.maxIter, S.cRe, S.cIm);
     job.row++;
   }
   const from = job.drawn;
@@ -620,6 +622,9 @@ function frame() {
   requestAnimationFrame(frame);
 }
 
+/* ================================================================
+   RESIZE / VIEW
+   ================================================================ */
 function resize() {
   const r = stage.getBoundingClientRect();
   if (r.width < 2 || r.height < 2) return;
@@ -643,43 +648,23 @@ function resize() {
 
 function viewD() { return S.view.span / W; }
 
-function screenToComplex(px, py) {
-  const dx = px - W / 2;
-  const dy = py - H / 2;
-  const cosT = Math.cos(S.rotation);
-  const sinT = Math.sin(S.rotation);
-  const rx = dx * cosT + dy * sinT;
-  const ry = -dx * sinT + dy * cosT;
-  const d = S.view.span / W;
-  return {
-    x: S.view.cx + rx * d,
-    y: S.view.cy - ry * d
-  };
-}
-
 function zoomAt(mx, my, factor) {
-  const pt = screenToComplex(mx, my);
+  const d = viewD();
+  const x0 = S.view.cx - S.view.span / 2;
+  const y1 = S.view.cy + d * H / 2;
+  const wx = x0 + mx * d;
+  const wy = y1 - my * d;
   const newSpan = Math.max(1e-13, Math.min(1e3, S.view.span * factor));
   const nd = newSpan / W;
-  const dx = mx - W / 2;
-  const dy = my - H / 2;
-  const cosT = Math.cos(S.rotation);
-  const sinT = Math.sin(S.rotation);
-  const rx = dx * cosT - dy * sinT;
-  const ry = dx * sinT + dy * cosT;
-
-  S.view.cx = pt.x - rx * nd;
-  S.view.cy = pt.y + ry * nd;
   S.view.span = newSpan;
+  S.view.cx = wx - mx * nd + newSpan / 2;
+  S.view.cy = wy + my * nd - nd * H / 2;
   needsFull = true;
   updateHud();
 }
 
 function resetView() {
   S.view = { ...FRACTALS[S.fid].view };
-  S.rotation = 0;
-  $('rotation').value = 0;
-  $('vRotation').textContent = '0°';
   needsFull = true;
   updateHud();
 }
@@ -689,10 +674,12 @@ function updateHud() {
   const zs = zoom < 10 ? zoom.toFixed(2)
             : zoom < 1e6 ? Math.round(zoom).toLocaleString()
             : zoom.toExponential(2);
-  const rot = Math.round(S.rotation * 180 / Math.PI) % 360;
-  hud.innerHTML = `zoom <b>${zs}×</b> &nbsp;·&nbsp; iter <b>${S.maxIter}</b> &nbsp;·&nbsp; ${FRACTALS[S.fid].name} &nbsp;·&nbsp; rot <b>${rot}°</b>`;
+  hud.innerHTML = `zoom <b>${zs}×</b> &nbsp;·&nbsp; iter <b>${S.maxIter}</b> &nbsp;·&nbsp; ${FRACTALS[S.fid].name}`;
 }
 
+/* ================================================================
+   POINTER
+   ================================================================ */
 const ptrs = new Map();
 let dragPt = null, pinch = null;
 
@@ -719,7 +706,6 @@ canvas.addEventListener('pointermove', e => {
   if (!ptrs.has(e.pointerId)) return;
   const p = toCanvas(e);
   ptrs.set(e.pointerId, p);
-
   if (ptrs.size === 2 && pinch) {
     const [a, b] = [...ptrs.values()];
     const dist = Math.hypot(a.x - b.x, a.y - b.y);
@@ -733,15 +719,9 @@ canvas.addEventListener('pointermove', e => {
     }
     pinch = { dist, mx, my };
   } else if (ptrs.size === 1 && dragPt) {
-    const deltaX = p.x - dragPt.x;
-    const deltaY = p.y - dragPt.y;
     const d = viewD();
-    const cosT = Math.cos(S.rotation);
-    const sinT = Math.sin(S.rotation);
-    const rx = deltaX * cosT + deltaY * sinT;
-    const ry = -deltaX * sinT + deltaY * cosT;
-    S.view.cx -= rx * d;
-    S.view.cy += ry * d;
+    S.view.cx -= (p.x - dragPt.x) * d;
+    S.view.cy += (p.y - dragPt.y) * d;
     dragPt = p;
     needsFull = true;
     updateHud();
@@ -767,6 +747,9 @@ canvas.addEventListener('dblclick', e => {
   zoomAt(p.x, p.y, 0.4);
 });
 
+/* ================================================================
+   PANEL
+   ================================================================ */
 const panel = $('panel');
 const menuBtn = $('menuBtn');
 function openPanel() {
@@ -789,6 +772,9 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'h' || e.key === 'H') togglePanel();
 });
 
+/* ================================================================
+   UI
+   ================================================================ */
 const fractalSel = $('fractal');
 for (const g of FRACTAL_GROUPS) {
   const og = document.createElement('optgroup');
@@ -841,8 +827,6 @@ function syncUI() {
   $('swap').checked = S.swap;
   $('negIm').checked = S.negIm;
   $('sinTwist').checked = S.sinTwist;
-  $('rotation').value = Math.round(S.rotation * 180 / Math.PI);
-  $('vRotation').textContent = Math.round(S.rotation * 180 / Math.PI) + '°';
 }
 
 function applyFractalDefaults(resetParams) {
@@ -962,21 +946,6 @@ $('quality').addEventListener('input', e => {
   resize();
 });
 
-$('rotation').addEventListener('input', e => {
-  S.rotation = +e.target.value * Math.PI / 180;
-  $('vRotation').textContent = e.target.value + '°';
-  needsFull = true;
-  updateHud();
-});
-
-$('resetRot').addEventListener('click', () => {
-  S.rotation = 0;
-  $('rotation').value = 0;
-  $('vRotation').textContent = '0°';
-  needsFull = true;
-  updateHud();
-});
-
 $('interior').addEventListener('input', e => {
   const n = parseInt(e.target.value.slice(1), 16);
   S.interior = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
@@ -995,6 +964,9 @@ $('save').addEventListener('click', () => {
   }, 'image/png');
 });
 
+/* ================================================================
+   BOOT
+   ================================================================ */
 if (window.ResizeObserver) {
   new ResizeObserver(() => resize()).observe(stage);
 } else {
